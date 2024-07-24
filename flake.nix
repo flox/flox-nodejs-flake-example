@@ -29,7 +29,7 @@
             };
             aarch64-linux = {
               url = "https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-arm64.tar.xz";
-              sha256 = "sha256-T5wv+xFoVdb6S2ZU5FP0A+MbUyhLgceJtz0dLiDG9xA=";
+              sha256 = "sha256-0lHNo+4KU52K6k6iMn6YmYyyNIdWkHOQLjXvsFJtV0s=";
             };
           };
           nodejs = pkgs.stdenv.mkDerivation {
