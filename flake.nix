@@ -14,6 +14,7 @@
       packages = forAllSystems (system:
         let
           pkgs = import nixpkgs { inherit system; };
+
           nodejsFor = {
             x86_64-linux = {
               url = "https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz";
@@ -35,11 +36,17 @@
           nodejs = pkgs.stdenv.mkDerivation {
             pname = "nodejs";
             version = "20.13.1";
-            src = pkgs.fetchurl (nodejsFor.${system});
-            buildInputs = [ pkgs.stdenv ];
+            src = pkgs.fetchurl nodejsFor.${system};
+            dontStrip = true;
             installPhase = ''
               mkdir -p $out
               cp -r * $out/
+              ${if pkgs.stdenv.isLinux then ''
+              patchelf \
+                --set-rpath "${pkgs.stdenv.cc.cc.lib}/lib" \
+                --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" \
+                $out/bin/node
+              '' else ""}
             '';
           };
         in
@@ -49,4 +56,3 @@
       );
     };
 }
-
